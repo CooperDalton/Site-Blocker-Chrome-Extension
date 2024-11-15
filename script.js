@@ -115,6 +115,7 @@ async function StartUp(){
     const categoryData = {
         category: `${category}`,
         time: 0,
+        timeElapsed: 0,
         urls: []
     }
     AddCategoryData(categoryData);
