@@ -122,6 +122,64 @@ async function StartUp(){
     //location.reload();
 });
 
+function AddEventListeners(category, div_category_item){
+    const hour = div_category_item.getElementsByClassName("hour")[0];
+    const minute = div_category_item.getElementsByClassName("minute")[0];
+    const url_input = div_category_item.getElementsByClassName("url")[0];
+    const add_button = div_category_item.getElementsByClassName("add")[0];
+    const remove_button = div_category_item.getElementsByClassName("remove")[0];
+
+    //console.log(url_input + " " + hour + " " + minute + " " + add_button + " " + remove_button);
+    hour.addEventListener("change", () => {
+        const hour_time = parseInt(hour.value) * 3600;
+        //TO DO Update time in storage
+    });
+    minute.addEventListener("change", () => {
+        const minute_time = parseInt(minute.value) * 60;
+        //TO DO Update time in storage
+    });
+
+    add_button.addEventListener("click", () => {
+        let category_this = category;
+        let url_value = url_input.value + "";
+        url_input.value = "";
+        if (url_value.indexOf("www.") === -1){
+            url_value = "www." + url_value;
+        }
+        if (url_value.indexOf("https://") === -1){
+            url_value = "https://" + url_value;
+        }
+        try {
+            var url = new URL(url_value);
+        } catch(e){
+            console.log(e);
+        }
+
+        AddUrlValue(url.hostname, category_this);
+
+        const list = document.createElement('li');
+        list.innerHTML = `${url.hostname}<button type="button" class="remove">Remove</button>`;
+        list.getElementsByClassName("remove")[0].addEventListener("click", () => {
+            RemoveUrl(url.hostname, category_this);
+            list.remove();
+        });
+        div_category_item.getElementsByClassName("listContainer")[0].appendChild(list);
+    });
+    remove_button.addEventListener("click", () => {
+        //TO DO Remove category from storage
+        div_category_item.remove();
+    });
+}
+
+//async function AddUrlData(urlData){
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+      chromeData = newValue;
+      console.log(chromeData);
+    }
+});
+
 async function AddCategoryData(categoryData){
     const chromeData = await chrome.storage.sync.get('Categories');
     
@@ -136,55 +194,31 @@ async function AddCategoryData(categoryData){
     }
 }
 
-function AddEventListeners(category, div_category_item){
-    const hour = div_category_item.getElementsByClassName("hour")[0];
-    const minute = div_category_item.getElementsByClassName("minute")[0];
-    const url_input = div_category_item.getElementsByClassName("url")[0];
-    const add_button = div_category_item.getElementsByClassName("add")[0];
-    const remove_button = div_category_item.getElementsByClassName("remove")[0];
+async function AddUrlValue(url, category){
+    const chromeData = await chrome.storage.sync.get('Categories');
 
-    console.log(url_input + " " + hour + " " + minute + " " + add_button + " " + remove_button);
-    hour.addEventListener("change", () => {
-        const hour_time = parseInt(hour.value) * 3600;
-        //TO DO Update time in storage
-    });
-    minute.addEventListener("change", () => {
-        const minute_time = parseInt(minute.value) * 60;
-        //TO DO Update time in storage
-    });
-
-    add_button.addEventListener("click", () => {
-        let category_this = category;
-        let url_value = url_input.value + "";
-        url_input.value = "";
-        if (url_value.indexOf("https://") === -1){
-            url_value = "https://" + url_value;
-        }
-        try {
-            var url = new URL(url_value);
-        } catch(e){
-            console.log(e);
-        }
-
-        const list = document.createElement('li');
-        list.innerHTML = `${url.hostname}<button type="button" class="remove">Remove</button>`;
-        list.getElementsByClassName("remove")[0].addEventListener("click", () => {
-            // TO DO Remove URL from storage
-            list.remove();
+    if (chromeData.Categories !== undefined){
+        chromeData.Categories.forEach(curr_category => {
+            if (curr_category.category === category){
+                curr_category.urls.push(url);
+                chrome.storage.sync.set({'Categories': chromeData.Categories});
+                return;
+            }
         });
-        div_category_item.getElementsByClassName("listContainer")[0].appendChild(list);
-        console.log(category_this);
-    });
-    remove_button.addEventListener("click", () => {
-        //TO DO Remove category from storage
-        div_category_item.remove();
-    });
+    }
 }
 
-//async function AddUrlData(urlData){
+async function RemoveUrl(url, category){
+    const chromeData = await chrome.storage.sync.get('Categories');
 
-chrome.storage.onChanged.addListener((changes, namespace) => {
-    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
-      chromeData = newValue;
+    if (chromeData.Categories !== undefined){
+        chromeData.Categories.forEach(curr_category => {
+            if (curr_category.category === category){
+                const index = curr_category.urls.indexOf(url);
+                curr_category.urls.splice(index, 1);
+                chrome.storage.sync.set({'Categories': chromeData.Categories});
+                return;
+            }
+        });
     }
-});
+}
