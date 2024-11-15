@@ -52,6 +52,15 @@ async function StartUp(){
                         <ul class="listContainer">
                         </ul>`;
             
+            category.urls.forEach(url => {
+                const list = document.createElement('li');
+                list.innerHTML = `${url}<button type="button" class="remove">Remove</button>`;
+                list.getElementsByClassName("remove")[0].addEventListener("click", () => {
+                    RemoveUrl(url, category.category);
+                    list.remove();
+                });
+                div_category_item.getElementsByClassName("listContainer")[0].appendChild(list);
+            });
             AddEventListeners(category.category, div_category_item);
             
             main_container.appendChild(div_category_item);
@@ -168,6 +177,7 @@ function AddEventListeners(category, div_category_item){
     });
     remove_button.addEventListener("click", () => {
         //TO DO Remove category from storage
+        RemoveCategory(category);
         div_category_item.remove();
     });
 }
@@ -192,6 +202,21 @@ async function AddCategoryData(categoryData){
             result.Categories.push(categoryData);
             chrome.storage.sync.set({'Categories': result.Categories});
         });
+    }
+}
+
+async function RemoveCategory(target_category){
+    const chromeData = await chrome.storage.sync.get('Categories');
+    
+    if (chromeData.Categories !== undefined){
+        chromeData.Categories.forEach(category => {
+            if (category.category === target_category){
+                const index = chromeData.Categories.indexOf(category);
+                chromeData.Categories.splice(index, 1);
+                chrome.storage.sync.set({'Categories': chromeData.Categories});
+                return;
+            }
+        })
     }
 }
 
