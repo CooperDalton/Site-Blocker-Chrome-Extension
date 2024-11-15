@@ -1,0 +1,15 @@
+{
+    "name": "Site Blocker",
+    "manifest_version": 3,
+    "version": "1.0.0",
+    "description": "This site blocker allows you to group multiple sites together ",
+    "author": "Cooper Dalton",
+    "action": {
+        "default_title": "Site Blocker",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "activeTab",
+        "storage"
+    ]
+}

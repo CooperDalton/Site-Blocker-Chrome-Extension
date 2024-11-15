@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Blocker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="navbar">
+        <a id="title">Site Blocker</a>
+        <button type="button" id="toggle_button" aria-pressed="true">On</button>
+    </div>
+
+    <div id="middle">
+        <div class="topbar">
+            <form role="search" class="form">
+                <input type="text" id="category_input" placeholder="Category">
+            </form>
+            <button type="button" class="add" id="category_add">Add</button>
+        </div>
+        <div class="container" id="main_container">
+        </div>
+    </div>
+</body>
+<script src="script.js"></script>
+</html>
