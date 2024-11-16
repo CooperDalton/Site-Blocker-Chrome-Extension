@@ -1,27 +1,33 @@
 current_category = {};
 curr_date = Date.now();
-curr_document = document;
-
-//When extension is started
-chrome.runtime.onStartup.addListener(function() {
-    current_category = {};
-    curr_date = Date.now();
-
-});
-
+curr_document = document.querySelector('body');
+console.log("Extension started");
 //When active tab is changed
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        const activeTab = tabs[0];
-        console.log("Active tab URL:", activeTab.url);
-        var url = new URL(activeTab.url);
-        curr_date = Date.now();
-        curr_document = activeTab.
 
+siteBlocked = false;
+activeTab = window.location.href;
+var url = new URL(activeTab);
+console.log("COM loaded");
+
+UpdateTimeForCategory();
+IsUrlInStorage(url);
+
+/*
+document.addEventListener('DOMContentLoaded', function() {
+    activeTab = window.location.hostname;
+    var url = new URL(activeTab);
+    console.log("COM loaded");
+
+    UpdateTimeForCategory();
+    IsUrlInStorage(url);
+});*/
+
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
         UpdateTimeForCategory();
         IsUrlInStorage(url);
-    });
-});
+    }
+  });
 
 async function UpdateTimeForCategory(){
     const chromeData = await chrome.storage.sync.get('Categories');
@@ -85,8 +91,10 @@ setInterval(() => {
         const elapsed = Date.now() - curr_date;
         curr_date = Date.now();
         current_category.timeElapsed += elapsed;
+        
 
-        if (current_category.timeElapsed >= current_category.time * 1000) {
+
+        if (current_category.timeElapsed >= current_category.time * 1000 && !siteBlocked) {
             BlockSite();
         }
     }
@@ -94,4 +102,10 @@ setInterval(() => {
 
 async function ResetTimeLimits(){
     //Loop through all categories and set elapsed time to 0
+}
+
+function BlockSite(){
+    const body = document.querySelector('body');
+    body.remove();
+    siteBlocked = true;
 }
