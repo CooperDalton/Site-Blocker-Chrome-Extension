@@ -142,11 +142,13 @@ function AddEventListeners(category, div_category_item){
     //console.log(url_input + " " + hour + " " + minute + " " + add_button + " " + remove_button);
     hour.addEventListener("change", () => {
         const hour_time = parseInt(hour.value) * 3600;
-        //TO DO Update time in storage
+        const minute_time = parseInt(minute.value) * 60;
+        UpdateTime(hour_time, minute_time, category);
     });
     minute.addEventListener("change", () => {
+        const hour_time = parseInt(hour.value) * 3600;
         const minute_time = parseInt(minute.value) * 60;
-        //TO DO Update time in storage
+        UpdateTime(hour_time, minute_time, category);
     });
 
     add_button.addEventListener("click", () => {
@@ -242,6 +244,20 @@ async function RemoveUrl(url, category){
             if (curr_category.category === category){
                 const index = curr_category.urls.indexOf(url);
                 curr_category.urls.splice(index, 1);
+                chrome.storage.sync.set({'Categories': chromeData.Categories});
+                return;
+            }
+        });
+    }
+}
+
+async function UpdateTime(hour, minute, category){
+    const chromeData = await chrome.storage.sync.get('Categories');
+
+    if (chromeData.Categories !== undefined){
+        chromeData.Categories.forEach(curr_category => {
+            if (curr_category.category === category){
+                curr_category.time = hour+minute;
                 chrome.storage.sync.set({'Categories': chromeData.Categories});
                 return;
             }
