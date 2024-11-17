@@ -7,20 +7,22 @@ console.log("Extension started");
 siteBlocked = false;
 activeTab = window.location.href;
 var url = new URL(activeTab);
-console.log("COM loaded");
 
 UpdateTimeForCategory();
 IsUrlInStorage(url);
 
-/*
-document.addEventListener('DOMContentLoaded', function() {
-    activeTab = window.location.hostname;
-    var url = new URL(activeTab);
-    console.log("COM loaded");
+CheckIfNewDay();
 
-    UpdateTimeForCategory();
-    IsUrlInStorage(url);
-});*/
+
+async function CheckIfNewDay(){
+    const saved_date = await chrome.storage.sync.get('date');
+    if (saved_date.date !== undefined){
+        if (curr_date.getFullYear() !== saved_date.date.getFullYear() || curr_date.getMonth() !== saved_date.date.getMonth() || curr_date.getDate() !== saved_date.date.getDate()){
+            ResetTimeLimits();
+        }
+    }
+    console.log("window loaded is working");
+}
 
 document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'visible') {
@@ -101,7 +103,14 @@ setInterval(() => {
 }, 1000);
 
 async function ResetTimeLimits(){
-    //Loop through all categories and set elapsed time to 0
+    const chromeData = await chrome.storage.sync.get('Categories');
+
+    if (chromeData.Categories !== undefined){
+        chromeData.Categories.forEach(category => {
+            category.timeElapsed = 0;
+            chrome.storage.sync.set({'Categories': chromeData.Categories});
+        });
+    }
 }
 
 function BlockSite(){
@@ -109,3 +118,8 @@ function BlockSite(){
     body.remove();
     siteBlocked = true;
 }
+
+window.addEventListener('beforeunload', function(event) {
+    const date = Date.now();
+    chrome.storage.sync.set({'date': date});
+});

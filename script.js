@@ -51,7 +51,13 @@ async function StartUp(){
                         </div>
                         <ul class="listContainer">
                         </ul>`;
-            
+            const minute = div_category_item.getElementsByClassName("minute")[0];
+            const hour = div_category_item.getElementsByClassName("hour")[0];
+            const time = category.time;
+
+            hour.selectedIndex = Math.floor(time / 3600);
+            minute.selectedIndex = Math.floor((time% 3600) / 300);
+
             category.urls.forEach(url => {
                 const list = document.createElement('li');
                 list.innerHTML = `${url}<button type="button" class="remove">Remove</button>`;
