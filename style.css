@@ -84,6 +84,10 @@ input:hover, input:focus {
     border-radius: 40px;
 }
 
+.header{
+    margin-top: 10px;
+}
+
 .header > form{
     margin: 0px 10px;
 }

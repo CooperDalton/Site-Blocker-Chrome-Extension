@@ -50,7 +50,8 @@ async function StartUp(){
                             </form>
                         </div>
                         <ul class="listContainer">
-                        </ul>`;
+                        </ul>
+                        `;
             const minute = div_category_item.getElementsByClassName("minute")[0];
             const hour = div_category_item.getElementsByClassName("hour")[0];
             const time = category.time;
