@@ -159,7 +159,7 @@ function AddEventListeners(category, div_category_item){
         UpdateTime(hour_time, minute_time, category);
     });
 
-    add_button.addEventListener("click", () => {
+    add_button.addEventListener("click", async () => {
         let category_this = category;
         let url_value = url_input.value + "";
         url_input.value = "";
@@ -169,12 +169,8 @@ function AddEventListeners(category, div_category_item){
         if (url_value.indexOf("https://") === -1){
             url_value = "https://" + url_value;
         }
-        try {
-            var url = new URL(url_value);
-        } catch(e){
-            console.log(e);
-        }
 
+        var url = new URL(url_value);
         AddUrlValue(url.hostname, category_this);
 
         const list = document.createElement('li');
@@ -272,3 +268,28 @@ async function UpdateTime(hour, minute, category){
         });
     }
 }
+
+async function FetchLogo(url) {
+    
+    try {
+      // Fetch the website's HTML
+      const response = await fetch(url);
+      const htmlText = await response.text();
+  
+      // Parse the HTML
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, "text/html");
+  
+      // Look for the favicon in <link> tags
+      const iconLink = doc.querySelector("link[rel='icon'], link[rel='shortcut icon']");
+      if (iconLink) {
+        const logoURL = iconLink.href.startsWith("http") ? iconLink.href : `${url}${iconLink.href}`;
+        return logoURL;
+      } else {
+        return null;
+        console.log("Logo not found");
+      }
+    } catch (error) {
+      console.error("Error fetching logo:", error);
+    }
+};

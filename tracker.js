@@ -23,7 +23,6 @@ async function CheckIfNewDay(){
             ResetTimeLimits();
         }
     }
-    console.log("window loaded is working");
 }
 
 document.addEventListener('visibilitychange', function() {
@@ -39,7 +38,6 @@ async function UpdateTimeForCategory(){
         return;
     }
     chromeData.Categories.forEach(category => {
-        console.log(category.category + " " + current_category.category)
         if (category.category === current_category.category){
             category.timeElapsed = current_category.timeElapsed;
         }
@@ -66,10 +64,8 @@ async function IsUrlInStorage(url){
         });
     }
     if (isInStorage){   
-        //console.log(url.hostname + " is in storage");
         UpdateCategory(category_name);  
     } else {
-        //console.log(url.hostname + " is not in storage");
         UpdateCategory("None");
     }
 }
@@ -84,7 +80,6 @@ async function UpdateCategory(curr_category){
         chromeData.Categories.forEach(category => {
             if (category.category === curr_category){
                 current_category = category;
-                console.log(category);
             }
         });
     }
@@ -124,4 +119,8 @@ function BlockSite(){
 window.addEventListener('beforeunload', function(event) {
     const date = Date.now();
     chrome.storage.sync.set({'date': date});
+});
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    IsUrlInStorage(url);
 });
