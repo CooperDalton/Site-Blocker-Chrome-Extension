@@ -2,8 +2,9 @@
     box-sizing: border-box;
 }
 
+
 body {
-    font-family: sans-serif;
+    font-family: "Inter", sans-serif;
     margin: 0;
     padding: 0;
     background-color: #EEEEEE;
@@ -38,6 +39,17 @@ body {
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 9999;
+}
+
+button {
+    height: 24px;
+    padding: 0px;
+    border: none;
+    border-radius: 0px;
+    cursor: pointer;
+    background-color: #0000;
+    margin: 0px 5px;
+
 }
 
 form {
@@ -86,10 +98,11 @@ input:hover, input:focus {
 
 .header{
     margin-top: 10px;
+    height: 24px
 }
 
 .header > form{
-    margin: 0px 10px;
+    margin: 0px 5px;
 }
 
 .topbar {
@@ -102,16 +115,11 @@ input:hover, input:focus {
 }
 
 .topbar > form, .topbar > button {
-    margin: 25px 5px;
-}
-
-.urlForm{
-    float: right;
-    margin: 0px;
+    margin: 24px 5px 0px 5px;
 }
 
 .remove{
-    margin-left: 40px;
+    margin-left: 20px;
     float: right;
 }
 
@@ -119,10 +127,38 @@ input:hover, input:focus {
     float: right;
 }
 
-.listContainer {
-    padding-bottom: 20px;
-}
-
 li {
     margin: 10px 0px;
+}
+
+li a{
+    text-decoration: none;
+    color: blue;
+    font-size: 14px;
+}
+
+.bottom_padding {
+    height: 20px;
+}
+
+.category{
+    font-size: 20px;
+    font-weight: 900;
+    margin-right: 5px;
+    color: #3B1E54;
+    margin-left: 5px;
+}
+
+.listContainer button{
+    margin-right: 54px;
+}
+
+.urlForm{
+    float: right;
+    margin: 0px;
+}
+
+select {
+    border: none;
+    border-radius: 5px;
 }

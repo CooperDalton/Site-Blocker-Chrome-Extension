@@ -16,8 +16,10 @@ CheckIfNewDay();
 
 async function CheckIfNewDay(){
     const saved_date = await chrome.storage.sync.get('date');
+    curr_date_object = new Date(curr_date);
+    saved_date_object = new Date(saved_date.date);
     if (saved_date.date !== undefined){
-        if (curr_date.getFullYear() !== saved_date.date.getFullYear() || curr_date.getMonth() !== saved_date.date.getMonth() || curr_date.getDate() !== saved_date.date.getDate()){
+        if (curr_date_object.getFullYear() !== saved_date_object.getFullYear() || curr_date_object.getMonth() !== saved_date_object.getMonth() || curr_date_object.getDate() !== saved_date_object.getDate()){
             ResetTimeLimits();
         }
     }
