@@ -27,6 +27,7 @@ async function CheckIfNewDay(){
 
 document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'visible') {
+        console.log("visible");
         UpdateTimeForCategory();
         IsUrlInStorage(url);
     }
@@ -85,20 +86,6 @@ async function UpdateCategory(curr_category){
     }
 }
 
-setInterval(() => {
-    if (current_category){
-        const elapsed = Date.now() - curr_date;
-        curr_date = Date.now();
-        current_category.timeElapsed += elapsed;
-        
-
-
-        if (current_category.timeElapsed >= current_category.time * 1000 && !siteBlocked) {
-            BlockSite();
-        }
-    }
-}, 1000);
-
 async function ResetTimeLimits(){
     const chromeData = await chrome.storage.sync.get('Categories');
 
@@ -112,7 +99,7 @@ async function ResetTimeLimits(){
 
 function BlockSite(){
     const body = document.querySelector('body');
-    body.remove();
+    body.innerHTML = "<div style='border-radius: 20px;margin-top: 200px; width: 600px; height: 400px; margin-left: auto; margin-right: auto; background-color: #3B1E54'> <h1 style='text-align: center; color: white'>Time's Up</h1></div>;"
     siteBlocked = true;
 }
 
@@ -124,3 +111,17 @@ window.addEventListener('beforeunload', function(event) {
 chrome.storage.onChanged.addListener((changes, namespace) => {
     IsUrlInStorage(url);
 });
+
+setInterval(() => {
+    if (current_category){
+        const elapsed = Date.now() - curr_date;
+        curr_date = Date.now();
+        current_category.timeElapsed += elapsed;
+        
+
+
+        if (current_category.timeElapsed >= current_category.time * 1000 && !siteBlocked) {
+            BlockSite();
+        }
+    }
+}, 1000);
