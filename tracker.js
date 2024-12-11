@@ -19,6 +19,14 @@ if (url.hostname === "www.youtube.com" || url.hostname === "youtube.com") {
     buttons.remove();
 }
 
+url.onChanged = function () {
+    if (url.hostname === "www.youtube.com" || url.hostname === "youtube.com") {
+        const buttons = document.getElementById('buttons');
+        //const buttons = document.querySelector('buttons');
+        buttons.remove();
+    }
+}
+
 async function CheckIfNewDay() {
     const saved_date = await chrome.storage.sync.get('date');
     curr_date_object = new Date(curr_date);
